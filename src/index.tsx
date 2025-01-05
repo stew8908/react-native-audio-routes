@@ -6,6 +6,10 @@ const LINKING_ERROR =
   '- You rebuilt the app after installing the package\n' +
   '- You are not using Expo Go\n';
 
+if (Platform.OS !== 'ios') {
+  throw new Error('This functionality is only available on iOS devices.');
+}
+
 const AudioRoutes = NativeModules.AudioRoutes
   ? NativeModules.AudioRoutes
   : new Proxy(
@@ -17,6 +21,12 @@ const AudioRoutes = NativeModules.AudioRoutes
       }
     );
 
-export function multiply(a: number, b: number): Promise<number> {
-  return AudioRoutes.multiply(a, b);
+export async function getAvailableAudioRoutes(): Promise<any> {
+  try {
+    const routes = await AudioRoutes.getAvailableAudioRoutes();
+    return routes;
+  } catch (error) {
+    console.error('Error getting available audio routes:', error);
+    throw error;
+  }
 }
