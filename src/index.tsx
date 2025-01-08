@@ -17,6 +17,13 @@ const AudioRoutes = NativeModules.AudioRoutes
       }
     );
 
-export function multiply(a: number, b: number): Promise<number> {
-  return AudioRoutes.multiply(a, b);
+export interface AudioRoute {
+  portName: string;
+  portType: string;
+  uid: string;
+  channels: number;
+}
+
+export function getAudioRoutes(): Promise<AudioRoute[]> {
+  return AudioRoutes.getAudioRoutes();
 }

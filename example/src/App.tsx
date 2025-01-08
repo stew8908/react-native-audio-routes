@@ -1,17 +1,27 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Text, View, StyleSheet } from 'react-native';
-import { multiply } from 'react-native-audio-routes';
+import { getAudioRoutes } from 'react-native-audio-routes';
+import type { AudioRoute } from 'react-native-audio-routes';
 
 export default function App() {
-  const [result, setResult] = useState<number | undefined>();
+  const [audioRoutes, setAudioRoutes] = useState<AudioRoute[]>([]);
 
   useEffect(() => {
-    multiply(3, 7).then(setResult);
+    const fetchAudioRoutes = async () => {
+      try {
+        const routes = await getAudioRoutes();
+        setAudioRoutes(routes);
+      } catch (error) {
+        console.error('Error fetching audio routes:', error);
+      }
+    };
+
+    fetchAudioRoutes();
   }, []);
 
   return (
     <View style={styles.container}>
-      <Text>Result: {result}</Text>
+      <Text>Available Audio Routes: {JSON.stringify(audioRoutes)}</Text>
     </View>
   );
 }
